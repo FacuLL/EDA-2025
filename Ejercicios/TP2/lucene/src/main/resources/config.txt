@@ -1,0 +1,1 @@
+prefixDir=D:/Proyectos/EDA/Ejercicios/TP2/lucene/src/main/resources
