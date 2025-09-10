@@ -6,16 +6,16 @@ public class EvaluatorInFijaBasicOperator {
 
     private Scanner scannerLine;
 
-    private Map<String, Double> variables;
+    private final Map<String, Double> variables;
 
-    private static boolean[][] precedenceMatriz=
+    private static final boolean[][] precedenceMatriz=
             {       { true,  true,  false, false, false, false, true },
                     { true,  true,  false, false, false, false, true },
                     { true,  true,  true,  true, false, false, true  },
                     { true,  true,  true,  true, false, false, true },
                     { true,  true,  true,  true, false, false, true },
                     { false,  false,  false,  false, false, false, false },
-                    { false,  false,  false,  false, false, false, false }
+                    { false,  false,  false,  false, false, false, false } // da igual
             };
 
 
@@ -84,7 +84,10 @@ public class EvaluatorInFijaBasicOperator {
                     Operation previous = aux.pop();
                     if (isPrintable(previous)) postfija.append(previous).append(" ");
                 }
-                aux.push(operation);
+                if (operation.equals(Operation.CLOSE_PAR) && aux.peek().equals(Operation.OPEN_PAR))
+                    aux.pop();
+                else
+                    aux.push(operation);
             }
         }
 
