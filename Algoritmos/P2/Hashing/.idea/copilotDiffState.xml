@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/ar/edu/itba/eda/HashBag.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/ar/edu/itba/eda/HashBag.java" />
+              <option name="originalContent" value="package ar.edu.itba.eda;&#10;&#10;import java.util.HashMap;&#10;import java.util.function.Function;&#10;&#10;public class HashBag&lt;T&gt; implements Bag&lt;T&gt; {&#10;    private ClosedHashing&lt;T, Integer&gt; hashMap;&#10;&#10;    public HashBag(Function&lt;T, Integer&gt; function) {&#10;        this.hashMap = new ClosedHashing&lt;&gt;(function);&#10;    }&#10;&#10;    @Override&#10;    public void add(T value) {&#10;        Integer found = hashMap.find(value);&#10;        hashMap.insertOrUpdate(value, found == null ? 1 : found+1);&#10;    }&#10;&#10;    @Override&#10;    public void remove(T value) {&#10;        Integer found = hashMap.find(value);&#10;        if (found == null) return;&#10;        if (found &lt;= 1) hashMap.remove(value);&#10;        else hashMap.insertOrUpdate(value, found-1);&#10;    }&#10;&#10;    @Override&#10;    public int getCount(T value) {&#10;        return hashMap.size();&#10;    }&#10;&#10;    @Override&#10;    public void dump() {&#10;        hashMap.dump();&#10;    }&#10;}&#10;" />
+              <option name="updatedContent" value="package ar.edu.itba.eda;&#10;&#10;import java.util.function.Function;&#10;&#10;public class HashBag&lt;T&gt; implements Bag&lt;T&gt; {&#10;    private ClosedHashing&lt;T, Integer&gt; hashMap;&#10;&#10;    public HashBag(Function&lt;T, Integer&gt; function) {&#10;        this.hashMap = new ClosedHashing&lt;&gt;(function);&#10;    }&#10;&#10;    @Override&#10;    public void add(T value) {&#10;        Integer found = hashMap.find(value);&#10;        hashMap.insertOrUpdate(value, found == null ? 1 : found+1);&#10;    }&#10;&#10;    @Override&#10;    public void remove(T value) {&#10;        Integer found = hashMap.find(value);&#10;        if (found == null) return;&#10;        if (found &lt;= 1) hashMap.remove(value);&#10;        else hashMap.insertOrUpdate(value, found-1);&#10;    }&#10;&#10;    @Override&#10;    public int getCount(T value) {&#10;        Integer found = hashMap.find(value);&#10;        return found == null ? 0 : found;&#10;    }&#10;&#10;    @Override&#10;    public void dump() {&#10;        hashMap.dump();&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

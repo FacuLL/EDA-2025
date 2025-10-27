@@ -1,0 +1,1 @@
+prefixDir=C:/Users/facul/Desktop/Proyectos/EDA-2025/Algoritmos/Lucene/src/main/resources
