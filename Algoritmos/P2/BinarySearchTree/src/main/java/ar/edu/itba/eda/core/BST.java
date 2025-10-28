@@ -8,7 +8,7 @@ import java.util.Stack;
 public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> {
 
     private Node<T> root;
-    private Traversal traversal;
+    private Traversal traversal = Traversal.BYLEVELS;
 
     public Node<T> insertRec(Node<T> node, T data) {
         if (node == null) return new Node<>(data, null, null);
@@ -24,29 +24,41 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> 
         this.root = insertRec(root, myData);
     }
 
+    private void preOrder(Node<T> node) {
+        System.out.print(node.getData() + " ");
+        if (node.getLeft() != null) preOrder(node.getLeft());
+        if (node.getRight() != null) preOrder(node.getRight());
+    }
+
     @Override
     public void preOrder() {
+        preOrder(root);
+    }
 
+    private void postOrder(Node<T> node) {
+        if (node.getLeft() != null) postOrder(node.getLeft());
+        System.out.print(node.getData() + " ");
+        if (node.getRight() != null) postOrder(node.getRight());
     }
 
     @Override
     public void postOrder() {
+        postOrder(root);
+    }
 
+    private void inOrder(Node<T> node) {
+        if (node.getLeft() != null) inOrder(node.getLeft());
+        System.out.print(node.getData() + " ");
+        if (node.getRight() != null) inOrder(node.getRight());
     }
 
     @Override
     public void inOrder() {
-        Stack<Node<T>> stack = new Stack<>();
-        Node<T> actual = root;
-        while(!stack.isEmpty() || actual != null) {
-            if (actual != null) {
-                stack.push(actual);
-                actual = actual.getLeft();
-            }
-            else {
+        inOrder(root);
+    }
 
-            }
-        }
+    public void delete(T data) {
+        root.delete(data);
     }
 
     @Override
@@ -65,19 +77,98 @@ public class BST<T extends Comparable<? super T>> implements BSTreeInterface<T> 
     }
 
     @Override
-    public Iterator<T> iterator() {
-        Queue<Node<T>> queue = new LinkedList<>();
-        Node<T> actual = root;
-        return new Iterator<T>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
+    public Iterator<T> iterator(){
+        return switch (traversal){
+            case BYLEVELS -> new LevelIterator();
+            case INORDER -> new InOrderIterator();
+        };
+    }
 
-            @Override
-            public T next() {
-                return null;
-            }
+    private class LevelIterator implements Iterator<T>{
+
+        private final Queue<NodeTreeInterface<T>> queue;
+
+        private LevelIterator() {
+            queue = new LinkedList<>();
+
+            if (root != null)
+                queue.add(root);
         }
+
+        @Override
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        @Override
+        public T next() {
+            NodeTreeInterface<T> currentNode = queue.remove();
+
+            if (currentNode.getLeft() != null)
+                queue.add(currentNode.getLeft());
+
+            if (currentNode.getRight() != null)
+                queue.add(currentNode.getRight());
+
+            return currentNode.getData();
+        }
+
+    }
+
+    private class InOrderIterator implements Iterator<T>{
+
+        private final Stack<NodeTreeInterface<T>> stack;
+        NodeTreeInterface<T> current;
+
+        private InOrderIterator() {
+            stack = new Stack<>();
+            current = root;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !stack.isEmpty() || current != null;
+        }
+
+        @Override
+        public T next() {
+            while (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+            }
+            NodeTreeInterface<T> nodeToProcess = stack.pop();
+            current = nodeToProcess.getRight();
+            return nodeToProcess.getData();
+        }
+    }
+
+    public static void main(String[] args) {
+        BST<Integer> myTree = new BST<>();
+        myTree.insert(50);
+        myTree.insert(60);
+        myTree.insert(80);
+        myTree.insert(20);
+        myTree.insert(70);
+        myTree.insert(40);
+        myTree.insert(44);
+        myTree.insert(10);
+        myTree.insert(40);
+
+        myTree.delete(80);
+        myTree.delete(10);
+
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        System.out.print('\n');
+        myTree.forEach( t-> System.out.print(t + " ") );
+        System.out.println('\n');
+
+        myTree.setTraversal(Traversal.INORDER);
+
+        for (Integer data : myTree) {
+            System.out.print(data + " ");
+        }
+        System.out.print('\n');
     }
 }

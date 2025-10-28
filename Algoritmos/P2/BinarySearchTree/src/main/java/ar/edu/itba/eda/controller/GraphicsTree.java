@@ -1,9 +1,7 @@
 package ar.edu.itba.eda.controller;
 
-
-
-import ar.edu.itba.eda.BSTreeInterface;
-import ar.edu.itba.eda.NodeTreeInterface;
+import ar.edu.itba.eda.core.BSTreeInterface;
+import ar.edu.itba.eda.core.NodeTreeInterface;
 import ar.edu.itba.eda.shape.Line;
 import ar.edu.itba.eda.shape.Circle;
 

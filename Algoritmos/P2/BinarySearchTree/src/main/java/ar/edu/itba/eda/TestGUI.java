@@ -1,13 +1,14 @@
-package ar.edu.itba.eda.controller;
+package ar.edu.itba.eda;
 
 
 // bajar el paquete nativo  
 // https://gluonhq.com/products/javafx/ 
 
 // en el VM poner el lib del paquete nativo
-// --module-path C:\Users\lgomez\Downloads\javafx-sdk-11.0.2\lib --add-modules javafx.fxml,javafx.controls
+// --module-path C:\Users\facul\Documents\javafx-sdk-11.0.2\lib --add-modules javafx.fxml,javafx.controls
 
-import ar.edu.itba.eda.Person;
+import ar.edu.itba.eda.core.Person;
+import ar.edu.itba.eda.controller.GraphicsTree;
 import ar.edu.itba.eda.core.BST;
 import javafx.application.Application;
 import javafx.scene.Scene;

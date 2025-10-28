@@ -1,4 +1,4 @@
-package ar.edu.itba.eda;
+package ar.edu.itba.eda.core;
 
 public class Person implements Comparable<Person> {
     private Integer age;
