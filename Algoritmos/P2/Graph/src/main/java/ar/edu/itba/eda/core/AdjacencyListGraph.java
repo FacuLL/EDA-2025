@@ -423,34 +423,60 @@ abstract public class AdjacencyListGraph<V, E> implements GraphService<V, E> {
 
 	@Override
 	public boolean hasCycle() {
-		Set<V> visitedNodes = new HashSet<>();
-		Set<InternalEdge> visitedEdges = new HashSet<>();
+        // Use standard DFS-based cycle detection.
+        Set<V> visited = new HashSet<>();
 
-		for(V vertex : getAdjacencyList().keySet()) {
-			if(hasCycleRec(visitedNodes,visitedEdges, null, vertex))
-				return true;
-		}
-		return false;
-	}
+        if (isDirected) {
+            Set<V> recStack = new HashSet<>();
+            for (V v : getAdjacencyList().keySet()) {
+                if (!visited.contains(v)) {
+                    if (hasCycleDirected(v, visited, recStack))
+                        return true;
+                }
+            }
+        } else {
+            for (V v : getAdjacencyList().keySet()) {
+                if (!visited.contains(v)) {
+                    if (hasCycleUndirected(v, visited, null))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private boolean hasCycleRec(Set<V> visitedNodes, Set<InternalEdge> visitedEdges, V lastNode, V vertex) {
-		visitedNodes.add(vertex);
-		boolean addedSameEdge = false;
-		for(InternalEdge edge : getAdjacencyList().get(vertex)) {
-			if(!addedSameEdge && !isDirected && edge.target.equals(lastNode)) { //No cuento la misma arista
-				visitedEdges.add(edge);
-				addedSameEdge = true;
-			}
-			else if(visitedNodes.contains(edge.target) && !visitedEdges.contains(edge)) {
-				return true;
-			}
-			else {
-				visitedEdges.add(edge);
-				if(hasCycleRec(visitedNodes, visitedEdges, vertex, edge.target)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    // Detect cycle in directed graph using recursion stack
+    private boolean hasCycleDirected(V vertex, Set<V> visited, Set<V> recStack) {
+        visited.add(vertex);
+        recStack.add(vertex);
+
+        for (InternalEdge edge : getAdjacencyList().get(vertex)) {
+            V nei = edge.target;
+            if (!visited.contains(nei)) {
+                if (hasCycleDirected(nei, visited, recStack))
+                    return true;
+            } else if (recStack.contains(nei)) {
+                return true;
+            }
+        }
+
+        recStack.remove(vertex);
+        return false;
+    }
+
+    // Detect cycle in undirected graph using parent to avoid counting the immediate edge back
+    private boolean hasCycleUndirected(V vertex, Set<V> visited, V parent) {
+        visited.add(vertex);
+
+        for (InternalEdge edge : getAdjacencyList().get(vertex)) {
+            V nei = edge.target;
+            if (!visited.contains(nei)) {
+                if (hasCycleUndirected(nei, visited, vertex))
+                    return true;
+            } else if (!nei.equals(parent)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
