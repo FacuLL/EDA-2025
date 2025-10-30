@@ -80,6 +80,72 @@ public class AVLTree<T extends Comparable<? super T>> implements AVLTreeInterfac
         return root;
     }
 
+    // Borrado público
+    public void delete(T myData) {
+        if (myData == null)
+            throw new IllegalArgumentException("Data cannot be null");
+        root = delete(root, myData);
+    }
+
+    // Implementación recursiva del borrado en AVL
+    private Node<T> delete(Node<T> currentNode, T myData) {
+        if (currentNode == null)
+            return null;
+
+        if (myData.compareTo(currentNode.data) < 0) {
+            currentNode.left = delete(currentNode.left, myData);
+        } else if (myData.compareTo(currentNode.data) > 0) {
+            currentNode.right = delete(currentNode.right, myData);
+        } else {
+            // Nodo encontrado
+            if (currentNode.left == null || currentNode.right == null) {
+                Node<T> temp = currentNode.left != null ? currentNode.left : currentNode.right;
+                if (temp == null) {
+                    // sin hijos
+                    return null;
+                } else {
+                    // un solo hijo
+                    return temp;
+                }
+            } else {
+                // dos hijos: obtener sucesor inorder (mínimo en subárbol derecho)
+                Node<T> temp = minValueNode(currentNode.right);
+                currentNode.data = temp.data;
+                currentNode.right = delete(currentNode.right, temp.data);
+            }
+        }
+
+        // actualizar altura
+        int i = currentNode.left == null ? -1 : currentNode.left.height;
+        int d = currentNode.right == null ? -1 : currentNode.right.height;
+        currentNode.height = 1 + Math.max(i, d);
+
+        int balance = getBalance(currentNode);
+
+        // reequilibrar
+        if (balance > 1) {
+            if (getBalance(currentNode.left) < 0) {
+                currentNode.left = leftRotate(currentNode.left);
+            }
+            return rightRotate(currentNode);
+        }
+        if (balance < -1) {
+            if (getBalance(currentNode.right) > 0) {
+                currentNode.right = rightRotate(currentNode.right);
+            }
+            return leftRotate(currentNode);
+        }
+
+        return currentNode;
+    }
+
+    private Node<T> minValueNode(Node<T> node) {
+        Node<T> current = node;
+        while (current.left != null)
+            current = current.left;
+        return current;
+    }
+
     @Override
     public boolean find(T myData) {
         if(root==null)

@@ -28,10 +28,10 @@ public class TestGUI extends Application {
 		StackPane root = new StackPane();
 		Scene scene = new Scene(root, 1300, 700);
 
-		BST<Integer> myTree = createModel();
-		GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
-		/*BST<Person> myTree = createModel2();
-		GraphicsTree<Person> c = new GraphicsTree<>(myTree);*/
+		//BST<Integer> myTree = createModel();
+		//GraphicsTree<Integer> c = new GraphicsTree<>(myTree);
+		BST<Person> myTree = createModel2();
+		GraphicsTree<Person> c = new GraphicsTree<>(myTree);
 
 		c.widthProperty().bind(scene.widthProperty());
 		c.heightProperty().bind(scene.heightProperty());
